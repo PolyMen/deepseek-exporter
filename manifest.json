@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "DeepSeek Chat Exporter",
+  "version": "4.0",
+  "description": "Экспорт чатов из DeepSeek с продвинутой фильтрацией",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://chat.deepseek.com/*"
+  ],
+  "action": {
+    "default_title": "Открыть слайдер экспорта"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.deepseek.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "slider.html", 
+        "styles.css", 
+        "slider-styles.css", 
+        "slider.js"
+      ],
+      "matches": ["https://chat.deepseek.com/*"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

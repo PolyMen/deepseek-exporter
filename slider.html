@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="slider-styles.css">
+</head>
+<body>
+    <div class="slider-container">
+        <div class="header">
+            <h3>🧠 DeepSeek Exporter</h3>
+            <p>v4.0 - слайдер на странице</p>
+        </div>
+
+        <div class="slider-content">
+            <!-- Весь HTML контент как раньше -->
+            <div class="tabs">
+                <button class="tab active" data-tab="main">📊 Основной</button>
+                <button class="tab" data-tab="service">⚙️ Сервис</button>
+            </div>
+            
+            <div id="main-tab" class="tab-content active">
+                <div class="info">
+                    💡 Убедитесь, что открыта страница chat.deepseek.com
+                </div>
+
+                <div class="filter-section">
+                    <h4>🔍 Фильтрация чатов</h4>
+                    
+                    <label class="filter-label">Поиск по тексту:</label>
+                    <input type="text" id="searchText" class="filter-input" placeholder="Введите текст для поиска...">
+                    
+                    <label class="filter-label">Тип сообщений:</label>
+                    <select id="messageType" class="filter-input">
+                        <option value="all">Все сообщения</option>
+                        <option value="user">Только пользователь</option>
+                        <option value="assistant">Только ассистент</option>
+                    </select>
+                    
+                    <label class="filter-label">Режим фильтрации:</label>
+                    <select id="filterMode" class="filter-input">
+                        <option value="whole-chat">Экспортировать весь чат</option>
+                        <option value="messages-only">Только совпадающие сообщения</option>
+                    </select>
+                    
+                    <div id="modeDescription" class="mode-description">
+                        <strong>Весь чат:</strong> Экспортируется полный диалог, если в нём есть искомый текст
+                    </div>
+                    
+                    <label class="filter-label">Сортировка:</label>
+                    <select id="sortOrder" class="filter-input">
+                        <option value="newest-first">Сначала новые</option>
+                        <option value="oldest-first">Сначала старые</option>
+                    </select>
+                    
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="caseSensitive"> Учитывать регистр
+                    </label>
+                    
+                    <button class="button secondary" id="testFilter">
+                        <span class="icon">🧪</span>Протестировать фильтр
+                    </button>
+                </div>
+
+                <!-- Список найденных чатов -->
+                <div id="chatsListContainer" class="filter-section" style="display: none;">
+                    <h4>📋 Найденные чаты</h4>
+                    <div class="chats-list" id="chatsList">
+                        <!-- Список чатов будет генерироваться здесь -->
+                    </div>
+                    <div class="filter-hint">
+                        Выберите чаты для экспорта или оставьте все выбранными
+                    </div>
+                </div>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Обработка...</div>
+                </div>
+                
+                <div class="stats-container" id="statsContainer">
+                    <div id="statsContent"></div>
+                </div>
+
+                <div class="export-options">
+                    <h4>📤 Форматы экспорта</h4>
+                    
+                    <div class="format-selector">
+                        <label class="format-option">
+                            <input type="checkbox" id="formatJson" value="json" checked class="format-checkbox">
+                            <span class="format-label">JSON</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="checkbox" id="formatTxt" value="txt" class="format-checkbox">
+                            <span class="format-label">TXT</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="checkbox" id="formatMd" value="markdown" class="format-checkbox">
+                            <span class="format-label">MD</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="checkbox" id="formatDoc" value="doc" class="format-checkbox">
+                            <span class="format-label">DOC</span>
+                        </label>
+                    </div>
+
+                    <button class="button" id="exportFiltered">
+                        <span class="icon">🚀</span>Экспорт с фильтром
+                    </button>
+                    <button class="button secondary" id="exportAll">
+                        <span class="icon">📚</span>Экспорт всех чатов
+                    </button>
+                </div>
+            </div>
+
+            <!-- Сервисная вкладка -->
+            <div id="service-tab" class="tab-content">
+                <div class="info">
+                    💡 Сервисные опции для диагностики и отладки расширения
+                </div>
+
+                <div class="service-section">
+                    <h4>🔍 Исследование базы данных</h4>
+                    <div class="service-description">
+                        Показывает все хранилища и их структуру, анализирует данные
+                    </div>
+                    <button class="button secondary" id="exploreDB">
+                        <span class="icon">📊</span>Исследовать базу данных
+                    </button>
+                </div>
+
+                <div class="service-section">
+                    <h4>📂 Поиск хранилищ</h4>
+                    <div class="service-description">
+                        Быстрый поиск всех доступных хранилищ IndexedDB
+                    </div>
+                    <button class="button secondary" id="findStores">
+                        <span class="icon">🔎</span>Найти хранилища
+                    </button>
+                </div>
+
+                <div class="service-section">
+                    <h4>🧪 Тестовый экспорт</h4>
+                    <div class="service-description">
+                        Экспорт небольшого количества данных для проверки работы
+                    </div>
+                    <button class="button secondary" id="testExport">
+                        <span class="icon">🧪</span>Тестовый экспорт (5 чатов)
+                    </button>
+                </div>
+
+                <div class="service-section">
+                    <h4>🔄 Сброс настроек</h4>
+                    <div class="service-description">
+                        Сброс всех настроек фильтров и экспорта к значениям по умолчанию
+                    </div>
+                    <button class="button secondary" id="resetSettings">
+                        <span class="icon">🔄</span>Сбросить настройки
+                    </button>
+                </div>
+
+                <div class="service-section sync-section">
+                    <h4>☁️ Синхронизация с Яндекс Диском</h4>
+                    <div class="service-description">
+                        Автоматическая синхронизация экспортированных файлов с вашим Яндекс Диском
+                    </div>
+                    
+                    <div id="syncStatus" class="sync-status" style="display: none;">
+                        <div class="sync-connected">
+                            ✅ Подключено к Яндекс Диску • <span id="lastSync">никогда</span>
+                        </div>
+                    </div>
+                    
+                    <div id="syncSetup">
+                        <button class="button secondary" id="setupYandexDisk">
+                            <span class="icon">⚙️</span>Настроить Яндекс Диск
+                        </button>
+                    </div>
+                    
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="autoSync"> Синхронизировать после экспорта
+                    </label>
+                    
+                    <div class="service-description" style="margin-top: 10px; font-size: 12px;">
+                        📁 Файлы сохраняются в: <code>DeepSeek-Exports/ФОРМАТ/</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="status" class="status"></div>
+        </div>
+    </div>
+    
+    <script src="slider.js"></script>
+
+    <div id="yandexModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>⚙️ Настройка Яндекс Диска</h4>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Для подключения Яндекс Диска:</p>
+                <ol>
+                    <li>Перейдите на <a href="https://yandex.ru/dev/disk/doc/dg/concepts/about-docpage/" target="_blank">страницу Яндекс OAuth</a></li>
+                    <li>Создайте приложение и получите OAuth токен</li>
+                    <li>Вставьте токен ниже:</li>
+                </ol>
+                
+                <input type="password" id="yandexToken" placeholder="y0_AgAAAAB...введите_токен" class="modal-input">
+                
+                <div class="modal-buttons">
+                    <button class="button" id="saveYandexToken">💾 Сохранить токен</button>
+                    <button class="button secondary" id="testYandexConnection">🧪 Проверить соединение</button>
+                </div>
+                
+                <div id="modalStatus" class="modal-status"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
